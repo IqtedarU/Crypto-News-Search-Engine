@@ -9,10 +9,12 @@ All articles are stored in compressed JSON format in S3 and include fields such 
 crypto-news-search-engine/
 │
 ├── app/
-│   ├── main.py                      # Flask search engine with L2 similarity
+│   ├── app.py                      # Flask search engine with L2 similarity
+|   |── app2.py                     # Flask search engine with RAG Q&A
 │   └── templates/
 │       ├── index.html              # Query input form
 │       └── search.html             # Displays ranked article results
+|       └── search2.html            # Displays top 5 results with RAG Q&A
 │
 ├── batch_pipeline/
 │   ├── scrape_news.py              # Scrapes CryptoSlate articles by page
@@ -69,6 +71,18 @@ crypto-news-search-engine/
 ![FrontPage](https://github.com/user-attachments/assets/61c74120-af0e-4861-bb5a-535229d0ac0b)
 ![Query](https://github.com/user-attachments/assets/b3fcac9f-1aa1-45ab-9a56-264eedaa5323)
 
+## RAG-Based Question Answering (Optional)
+
+This project includes a simple **Retrieval-Augmented Generation (RAG)** pipeline layered on top of the semantic search engine. It enables users to ask natural language questions and receive grounded, generated answers based on top search results.
+
+- The top 3 documents retrieved via FAISS are used as context for OpenAI’s `gpt-3.5-turbo` model.
+- The prompt asks the model to answer the question using only the provided context, reducing hallucinations.
+- This approach is helpful for summarizing relevant information from multiple documents into a single coherent response.
+
+> Currently, documents are retrieved purely by embedding similarity without time-based filtering. For more time-sensitive domains like crypto news, adding metadata filtering (e.g., recent articles only) can improve relevance and reduce outdated information.
+
+**Example screenshot of the RAG interface:**
+![image](https://github.com/user-attachments/assets/c80c4ce3-7aca-4a42-a782-df5ea75f865f)
 
 ## Data Schema
 Example JSON structure for articles:
